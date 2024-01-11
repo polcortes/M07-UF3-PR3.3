@@ -32,7 +32,7 @@
             exit;
         }
 
-        $query = $pdo -> prepare("SELECT * FROM users WHERE nom = '". $_POST["user"] ."' AND '". $_POST["pass"] ."' = contrasenya;");
+        $query = $pdo -> prepare("SELECT nom, contrasenya FROM users WHERE nom = '". $_POST["user"] ."' AND contrasenya = SHA2('". $_POST["pass"] ."', 512) ;");
         $query -> execute();
 
         $row = $query -> fetch();
@@ -40,7 +40,7 @@
             echo "<span>Benvingut, ". $row["nom"] ."!</span>";
         }
 
-        var_dump($row);
+        // var_dump($row);
 
         // pol -> '12345'
         // erik -> '123454321'
@@ -78,37 +78,5 @@
             align-items: center;
         }
     </style>
-</body>
-</html>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enviar mails.</title>
-</head>
-<body>
-    <main style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
-        <h1>Enviar mail</h1>
-        <?php
-        if (isset($_POST["texto"])) {
-            mail(
-                $_POST["email"],        // Destinatario.
-                $_POST["asunto"],       // Asunto.
-                $_POST["texto"]         // Contenido del mensaje.
-            );
-            echo "<span>Mail enviado.   Revisa tu bandeja!</span>";
-        } else {
-            echo '
-            <form style="display: flex; flex-direction: column; justify-content: center; align-items: center; width: 70vw;" method="post">
-                <label>Destinatario:<input type="email" name="email" id="email"></label>
-                <label>Asunto:<input type="text" name="asunto" id="asunto"></label>
-                <label>Texto: <textarea name="texto" id="texto" cols="30" rows="10"></textarea></label>
-                <input type="submit" value="Enviar correo" style="width: fit-content;">
-            </form>';
-        }
-        ?>
-    </main>
 </body>
 </html>
