@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ca">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contrasenyes encriptades</title>
+    <title>Login anti-SQLInjection i amb contrasenyes encriptades.</title>
 </head>
 <body>
     <form method="post">
@@ -19,8 +19,11 @@
         <input type="submit" value="Entrar">
     </form>
 
-    <?php 
-    if (isset($_POST["user"])) {
+    <?php
+    session_start();
+    if ($_SESSION["user-registered"]) {
+        header("Location: http://$_SERVER[HTTP_HOST]/dashboard.php");
+    } else if (isset($_POST["user"])) {
         try {
             $hostname = "localhost";
             $dbname = "mylogin";
@@ -40,20 +43,23 @@
         if (str_contains($user, ";") or str_contains($user, "--") or str_contains($user, "/*") or str_contains($user, "*/") or str_contains($pass, ";") or str_contains($pass, "--") or str_contains($pass, "/*") or str_contains($pass, "*/")) {
             echo "<span>Has puesto valores no válidos</span>";
         } else {
-            $query->bindParam(':nom', $user);
-            $query->bindParam(':contrasenya', $pass);
+            $query -> bindParam(':nom', $user);
+            $query -> bindParam(':contrasenya', $pass);
 
             $query -> execute();
 
             $row = $query -> fetch();
             if ($row) {
                 echo "<div>Benvingut, ". $row["nom"] ."!</div>";
+                $_SESSION["user-registered"] = $row["nom"];
+                header("Location: http://$_SERVER[HTTP_HOST]/dashboard.php");
             }
         }
 
         // pol -> '12345'
         // erik -> '123454321'
     }
+
     ?>
 
     <style>

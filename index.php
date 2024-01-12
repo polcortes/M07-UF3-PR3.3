@@ -7,7 +7,7 @@
 </head>
 <body>
     <form method="post">
-        <h1>My Login</h1>
+        <h1>My Login [NO SEGUR!]</h1>
         <label>
             User
             <input type="text" name="user" id="user">
